@@ -1,0 +1,49 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title> Blogging System</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 style=" text-align: center;">Blogs Explore</h1>
+
+    <hr>
+
+    <div class="container">
+        <a href="{{ url_for('blogs.blogs_form') }}"><button type="button" style="background-color: #9f0630;"
+                class="btn text-white">Create Blog</button></a>
+        <br>
+        <br>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for p in blogs_data %}
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="data:;base64, {{ p.blog_image }}" class="card-img-top" alt="/Issue">
+                    <div class="card-body">
+                        <h5 class="card-title">Location: {{p.title}}</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the
+                            card's content.</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Bedrooms: {{p.title}}<br> Bathrooms: {{p.title}}</li>
+                        <li class="list-group-item">Carpet: {{p.title}} Sqr Ft</li>
+                        <li class="list-group-item">Cost: {{p.title}} Euro <br> Deposit: {{p.title}} Euro</li>
+                        <li class="list-group-item">Garage: {{p.title}}</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="{{ url_for('blogs.blogs_form', id = p.id) }}" class="card-link"><button
+                                class="btn btn-primary">Update</button></a>
+                        <a href="{{ url_for('blogs.delete_blog', id = p.id) }}" class="card-link"><button
+                                class="btn btn-primary">Delete</button></a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+</div>
+
+{% endblock %}

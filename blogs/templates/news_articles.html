@@ -1,0 +1,60 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title> Blogging System</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 style=" text-align: center;">Search News Articles</h1>
+
+    <hr>
+
+    <div class="container">
+        <br>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <form method="POST" action="{{ url_for('blogs.news_articles') }}">
+                <div class="input-group">
+                    <select id="category" name="category" class="form-select">
+                        <option value="business" selected>Business</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="general">General</option>
+                        <option value="health">Health</option>
+                        <option value="science">Science</option>
+                        <option value="sports">Sports</option>
+                        <option value="technology">Technology</option>
+                    </select>
+                    <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+                </div>
+            </form>
+        </div>
+        <hr>
+        <br>
+        <br>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for a in articles %}
+            <br>
+            <div class="row">
+                <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    {{a.source}}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Title : {{ a.title }} </h5>
+                    <p class="card-text">Description : {{ a.description }} </p>
+                    <p class="card-text">URL :{{ a.url }} </p>
+
+
+                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                </div>
+            </div>
+            </div>
+            </div>
+
+
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

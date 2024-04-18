@@ -1,0 +1,76 @@
+<link href="https://fonts.googleapis.com/css?family=Schoolbell&v1" rel="stylesheet">
+<style>
+  ul {
+  text-align: center;
+}
+
+ul a {
+  transition: 0.3s ease;
+  /* background: #9f0630; */
+  color: #9f0630;
+  font-size: 20px;
+  text-decoration: none;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  padding: 20px 0;
+  margin: 0 5px;
+  font-size: 17px;
+}
+ul a:hover {
+  border-top: 4px solid #9f0630;
+  border-bottom: 4px solid #9f0630;
+  padding: 6px 0; 
+}
+</style>
+<div>
+  <header class="blog-header py-3 p-3" style="background:#E4960E;">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-4 pt-1">
+        <!-- <a class="text-muted" href="#">Subscribe</a> -->
+        <!-- <a class="blog-header-logo text-dark" style="font-family: 'Lucida Calligraphy', Lucida Calligraphy, serif;font-size: 40px;" href="#">Jingaa</a> -->
+
+      </div>
+      <div class="col-4 text-center">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Ephesis&display=swap');
+        </style>
+        <a class="blog-header-logo " style="font-family: serif;font-size: 40px; color: #0e1517  ;" href="#">BlogoSphere</a>
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center">
+        <a class="text-muted" href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
+        </a>
+        <!-- <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a> -->
+      </div>
+    </div>
+  </header>
+  <header class="d-flex align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom p-3">
+    <a href="/" class="d-flex align-items-center col-md-2 mb-2 mb-md-0 text-dark text-decoration-none">
+    </a>
+
+    <ul style="font-size: 20px;" class="nav col-12 col-md-auto mb-7 justify-content-center mb-md-0">
+      <li><a href="{{ url_for('users.home') }}" class="nav-link px-2 link-dark" >Home</a></li>
+      {% if current_user.is_authenticated %}
+      <li><a href="{{ url_for('blogs.blogs') }}" class="nav-link px-2 link-dark">Blogs</a></li>
+      <li><a href="{{ url_for('blogs.my_blogs') }}" class="nav-link px-2 link-dark">My Blogs</a></li>
+      <li><a href="{{ url_for('blogs.news_articles') }}" class="nav-link px-2 link-dark">News Articles</a></li>
+      <li><a href="{{ url_for('blogs.blog_videos') }}" class="nav-link px-2 link-dark">Blogging Videos</a></li>
+      <li><a href="{{ url_for('users.profile') }}" class="nav-link px-2 link-dark">Profile</a></li>
+      
+      {% endif %}
+      <li><a href="{{ url_for('users.aboutus') }}" class="nav-link px-2 link-dark">About Us</a></li>
+    </ul>
+
+    <div class="col-md-3 ">
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('users.logout') }}"><button type="button"  class="btn me-2" style="background-color: #71989B;">Logout</button></a>
+      {% endif %}
+
+      {% if not current_user.is_authenticated %}
+      <a href="{{ url_for('users.signin') }}"><button type="button"  class="btn me-2" style="background-color: #71989B;">Login</button></a>   
+
+      <a href="{{ url_for('users.signup') }}"><button type="button" class="btn text-dark" style="background-color: #71989B;">Sign-up</button></a>
+      {% endif %}
+    </div>
+  </header>
+</div>

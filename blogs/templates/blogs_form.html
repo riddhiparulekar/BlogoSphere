@@ -1,0 +1,63 @@
+{% extends '_partials/base.html' %}
+
+{% block title %}
+<title> Blogging System</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="card-body p-5">
+        <h1>Blog Form</h1>
+        <hr>
+        <form enctype="multipart/form-data" method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="form-outline mb-3">
+                {{ form.category(class_="form-control") }}
+            </div>
+
+            <div class="form-outline mb-3">
+                {{ form.title(class_="form-control") }}
+            </div>
+
+            <div class="form-outline mb-3">
+                {{ form.blog_content(class_="form-control") }}
+            </div>
+
+            <div class="form-outline mb-3">
+                
+                {% if image_src %}
+                    <label for="img">Current Image:</label>
+                    <img class="form-control" src="{{ image_src }}" name="existing_img" style="width: 18rem;" alt="">
+                    <br>
+                    <p>Upload a new image to replace the current one:</p>
+
+                {% endif %}
+                {{ form.img(class_="form-control", src_=image_src) }}
+            </div>
+
+            <div>
+                {% if form.errors %}
+                    {{ form.errors }}
+                {% endif %}
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div>
+                <a class="link-danger"> {{ form.submit(class_="btn btn-primary btn-lg") }}</a>
+            </div>
+    </div>
+    </form>
+
+</div>
+{% endblock %}
