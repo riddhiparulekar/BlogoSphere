@@ -1,0 +1,6 @@
+/venv
+/__pycache__
+/lib_api
+/library_api
+/news_api
+*.zip
