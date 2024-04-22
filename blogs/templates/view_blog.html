@@ -1,115 +1,82 @@
 {% extends '_partials/base.html' %}
 
 {% block title %}
-<title> Blogging System</title>
+<title>{{ blog_data.title }} - Blogging System</title>
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1 style=" text-align: center;">Blogs Explore</h1>
-
+<div class="container py-5">
+    <h1 class="text-center mb-4">{{ blog_data.title }}</h1>
     <hr>
 
-    <div class="container">
-
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="data:;base64, {{ blog_data.blog_image }}" class="card-img-top" alt="/Issue">
-                    <div class="card-body">
-                        <h5 class="card-title">Location: {{blog_data.title}}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the
-                            card's content.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Bedrooms: {{blog_data.title}}<br> Bathrooms: {{blog_data.title}}
-                        </li>
-                        <li class="list-group-item">Carpet: {{blog_data.title}} Sqr Ft</li>
-                        <li class="list-group-item">Cost: {{blog_data.title}} Euro <br> Deposit: {{blog_data.title}}
-                            Euro</li>
-                        <li class="list-group-item">Garage: {{blog_data.title}}</li>
-                        <li class="list-group-item">No of Views: {{blog_data.no_of_views}}</li>
-                    </ul>
-                    <div class="card-body">
-
-                    </div>
-                </div>
-            </div>
+    <!-- Blog Section -->
+    <div class="card mb-4">
+        <img src="data:;base64, {{ blog_data.blog_image | safe }}" class="card-img-top" alt="{{ blog_data.title }}">
+        <div class="card-body">
+            <p class="card-text">{{ blog_data.blog_content | safe }}</p>
+            <footer class="blockquote-footer">
+                Published on {{ blog_data.publish_datetime.strftime('%B %d, %Y at %H:%M') }}
+                <cite title="Source Title"> by {{ blog_data.author.first_name }} {{ blog_data.author.last_name }}</cite>
+            </footer>
         </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Category: {{ blog_data.category.name }}</li>
+            <li class="list-group-item">Views: {{ blog_data.no_of_views }}</li>
+        </ul>
+    </div>
 
-        <br>
-        <hr>
-        <br>
-
-        <div class="container">
-            <u>
-                <h5 class="title"><b>Comments Section:</b></h5>
-            </u>
-            <form action="{{ url_for('blogs.add_comment', blog_id=blog_data.id) }}" method="post">
-                <div class="mb-3">
-                    <label for="commentTextArea" class="form-label">Your Comment</label>
-                    <textarea class="form-control" id="comment" name="comment" rows="3"
-                        placeholder="Type your comment here..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Post Comment</button>
-            </form>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            {% for comment in comments %}
-            <div class="col-sm-6">
-                <div class="card mb-4">
-                    <a href="{{ url_for('blogs.delete_comment', id=comment.id, blog_id=blog_data.id) }}"
+    <!-- Comments Section -->
+    <h3 class="mb-3">Comments:</h3>
+    {% for comment in comments %}
+    <div class="card bg-light mb-3">
+        {% if current_user.is_authenticated and current_user.id == comment.author_id %}
+        <a href="{{ url_for('blogs.delete_comment', id=comment.id, blog_id=blog_data.id) }}"
                         class="d-flex justify-content-end" style="background-color: #ecd4aa;"><button type="button"
                             class="btn-close"></button></a>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ comment.author.email_id }} | {{ comment.author.first_name | capitalize
-                            }} {{ comment.author.last_name | capitalize }}</h5>
-                        <p class="card-subtitle mb-2 text-muted">{{ comment.publish_datetime }}</p>
-                        <p class="card-text">{{ comment.comment }}</p>
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                        data-bs-target="#sentimentModal{{ comment.id }}">
-                        Show Sentiment
-                    </button>
-                </div>
-            </div>
-
-            <!-- Sentiment Analysis Modal -->
-            <div class="modal fade" id="sentimentModal{{ comment.id }}" tabindex="-1" aria-labelledby="sentimentModalLabel{{ comment.id }}"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="sentimentModalLabel">Sentiment Analysis</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Example of displaying the sentiment data; adjust as necessary for your graph or visual representation -->
-                            <p>Negative: {{ comment.neg_sentiment_score }}</p>
-                            <p>Neutral: {{ comment.neu_sentiment_score }}</p>
-                            <p>Positive: {{ comment.pos_sentiment_score }}</p>
-                            <p>Compound: {{ comment.compound_sentiment_score }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <p>No comments yet.</p>
-            {% endfor %}
+        {% endif %}
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>{{ comment.author.first_name }} {{ comment.author.last_name }}</span>
+            <small class="text-muted">{{ comment.publish_datetime.strftime('%B %d, %Y at %H:%M') }}</small>
         </div>
-
+        <div class="card-body">
+            <p class="card-text">{{ comment.comment }}</p>
+            <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#sentimentModal{{ comment.id }}">Show Sentiment</button>
+        </div>
     </div>
-    <br>
+    <!-- Sentiment Analysis Modal -->
+    <div class="modal fade" id="sentimentModal{{ comment.id }}" tabindex="-1" aria-labelledby="sentimentModalLabel{{ comment.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sentimentModalLabel{{ comment.id }}">Sentiment Analysis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Negative: {{ comment.neg_sentiment_score }}</p>
+                    <p>Neutral: {{ comment.neu_sentiment_score }}</p>
+                    <p>Positive: {{ comment.pos_sentiment_score }}</p>
+                    <p>Compound: {{ comment.compound_sentiment_score }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-muted">No comments yet.</p>
+    {% endfor %}
 
-
+    <!-- Comment Form -->
+    <div class="mt-5">
+        <h3>Add a Comment</h3>
+        <form action="{{ url_for('blogs.add_comment', blog_id=blog_data.id) }}" method="post">
+            <div class="mb-3">
+                <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Type your comment here..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+    </div>
 
 </div>
-
 {% endblock %}

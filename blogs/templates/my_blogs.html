@@ -15,32 +15,36 @@
                 class="btn text-white">Create Blog</button></a>
         <br>
         <br>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for p in blogs_data %}
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="data:;base64, {{ p.blog_image }}" class="card-img-top" alt="/Issue">
-                    <div class="card-body">
-                        <h5 class="card-title">Location: {{p.title}}</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the
-                            card's content.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Bedrooms: {{p.title}}<br> Bathrooms: {{p.title}}</li>
-                        <li class="list-group-item">Carpet: {{p.title}} Sqr Ft</li>
-                        <li class="list-group-item">Cost: {{p.title}} Euro <br> Deposit: {{p.title}} Euro</li>
-                        <li class="list-group-item">Garage: {{p.title}}</li>
-                    </ul>
-                    <div class="card-body">
-                        <a href="{{ url_for('blogs.blogs_form', id = p.id) }}" class="card-link"><button
-                                class="btn btn-primary">Update</button></a>
-                        <a href="{{ url_for('blogs.delete_blog', id = p.id) }}" class="card-link"><button
-                                class="btn btn-primary">Delete</button></a>
+        <div class="container mt-5">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for blog in blogs_data %}
+                <div class="col">
+                    <div class="card h-100">
+                        <!-- Use MIME type for proper image display -->
+                        <img src="data:{{ blog.blog_image_mimetype }};base64, {{ blog.blog_image }}" class="card-img-top" alt="{{ blog.blog_image_name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ blog.title }}</h5>
+                            <p class="card-text">{{ blog.blog_content | truncate(120) }}</p> <!-- Truncate long content -->
+                            <p class="text-muted">Category: {{ blog.category.name }}</p>
+                            <p class="text-muted">Published on: {{ blog.publish_datetime.strftime('%B %d, %Y') }}</p>
+                            <p class="text-muted">Views: {{ blog.no_of_views }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ url_for('blogs.view_blog', id=blog.id) }}" class="btn btn-primary">Read More</a>
+                            <!-- Update and Delete buttons can be shown conditionally to the author or admin -->
+                            {% if current_user.is_authenticated and current_user.id == blog.author_id %}
+                            <a href="{{ url_for('blogs.blogs_form', id=blog.id) }}" class="btn btn-outline-secondary">Update</a>
+                            <a href="{{ url_for('blogs.delete_blog', id=blog.id) }}" class="btn btn-outline-danger">Delete</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+                {% else %}
+                <div class="col">
+                    <p>No blogs found!</p>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
     <br>

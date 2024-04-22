@@ -2,6 +2,7 @@ from b_users import users_bp
 from flask import render_template, request, redirect, url_for
 from .models import User
 from .forms import SigninForm, SignupForm, UserForm
+from .utils import fetch_all_countries
 from extension import database, bcrypt, login_man
 from flask_login import login_user, logout_user, current_user, login_required, LoginManager
 
@@ -19,7 +20,7 @@ def signup():
     form = SignupForm()
     if form.validate_on_submit():
         encrypt_password = bcrypt.generate_password_hash(form.password.data)
-        user = User(first_name = form.first_name.data, last_name = form.last_name.data, email_id = form.email_id.data, password = encrypt_password)
+        user = User(first_name = form.first_name.data, last_name = form.last_name.data, email_id = form.email_id.data, password = encrypt_password, country=form.country.data)
         database.session.add(user)
         database.session.commit()
         return redirect(url_for('users.signin'))
@@ -51,7 +52,6 @@ def userload(id):
 @users_bp.route("/profile", methods=['GET', 'POST'])
 def profile():
     user = User.query.get(current_user.id)
-
     form = UserForm(obj=user)
 
     if form.validate_on_submit():

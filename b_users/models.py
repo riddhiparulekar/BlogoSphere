@@ -9,4 +9,5 @@ class User(database.Model, UserMixin):
     last_name = database.Column(database.String(50), nullable = False)
     email_id = database.Column(database.String(30),nullable = False, unique = True)
     password = database.Column(database.String(30), nullable = False)
+    country = database.Column(database.String(50), nullable=True)
 
